@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -12,12 +13,35 @@ public class Player : MonoBehaviour {
   private float moveSpeed = 5f;
   private float rotateSpeed = 12f;
 
+  private float interactionDistance = 2f;
+
   [SerializeField] private GameInput gameInput;
 
   private void Update() {
 
+    // Input
     var inputDir = gameInput.GetMovementVectorNormalized();
 
+    // Movement
+    var moveDir = HandleMovement(inputDir);
+
+    // Update Walking state
+    IsWalking = moveDir.sqrMagnitude > 0;
+
+    //if (gameInput.GetIsInteracting()) {
+    // Interaction
+    HandleInteractions();
+    //}
+  }
+
+  private void HandleInteractions() {
+
+    if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out var hitInfo, interactionDistance)) {
+      Debug.Log(hitInfo.transform.gameObject);
+    }
+  }
+
+  private Vector3 HandleMovement(Vector2 inputDir) {
     // Move
     var moveDir = new Vector3(inputDir.x, 0, inputDir.y);
 
@@ -51,9 +75,9 @@ public class Player : MonoBehaviour {
       moveDir = Vector3.zero;
     }
 
-    IsWalking = moveDir.sqrMagnitude > 0;
-
     transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeed * Time.deltaTime);
+
+    return moveDir;
   }
 
   private bool CheckMove(Vector3 moveDir, float moveDistance) {
