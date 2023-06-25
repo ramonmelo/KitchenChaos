@@ -11,17 +11,11 @@ public class Player : MonoBehaviour {
   private float moveSpeed = 5f;
   private float rotateSpeed = 12f;
 
+  [SerializeField] private GameInput gameInput;
+
   private void Update() {
 
-    // Input
-    var inputDir = Vector2.zero;
-
-    if (Input.GetKey(KeyCode.W)) { inputDir.y = 1; }
-    if (Input.GetKey(KeyCode.S)) { inputDir.y = -1; }
-    if (Input.GetKey(KeyCode.A)) { inputDir.x = -1; }
-    if (Input.GetKey(KeyCode.D)) { inputDir.x = 1; }
-
-    inputDir = inputDir.normalized;
+    var inputDir = gameInput.GetMovementVectorNormalized();
 
     // Move
     var moveDir = new Vector3(inputDir.x, 0, inputDir.y);
