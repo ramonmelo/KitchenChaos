@@ -4,16 +4,12 @@ using UnityEngine;
 
 public class GameInput : MonoBehaviour {
 
-  public Vector2 GetMovementVectorNormalized() {
+  private PlayerInputActions playerActions;
 
-    // Input
-    var inputDir = Vector2.zero;
-
-    if (Input.GetKey(KeyCode.W)) { inputDir.y = 1; }
-    if (Input.GetKey(KeyCode.S)) { inputDir.y = -1; }
-    if (Input.GetKey(KeyCode.A)) { inputDir.x = -1; }
-    if (Input.GetKey(KeyCode.D)) { inputDir.x = 1; }
-
-    return inputDir.normalized;
+  private void Awake() {
+    playerActions = new PlayerInputActions();
+    playerActions.Player.Enable();
   }
+
+  public Vector2 GetMovementVectorNormalized() => playerActions.Player.Move.ReadValue<Vector2>();
 }
