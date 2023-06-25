@@ -46,6 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  InteractLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   gameInput: {fileID: 0}
 --- !u!1001 &2690498853527973665
 PrefabInstance:

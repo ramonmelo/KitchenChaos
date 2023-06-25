@@ -9,13 +9,27 @@ public class Player : MonoBehaviour {
 
   public bool IsWalking { get; private set; }
 
-  [SerializeField]
-  private float moveSpeed = 5f;
-  private float rotateSpeed = 12f;
-
-  private float interactionDistance = 2f;
-
+  [SerializeField] private float moveSpeed = 5f;
+  [SerializeField] private LayerMask InteractLayerMask;
   [SerializeField] private GameInput gameInput;
+
+  private readonly float rotateSpeed = 12f;
+  private readonly float interactionDistance = 2f;
+
+  private void Start() {
+    gameInput.OnInteractAction += GameInput_OnInteractAction;
+  }
+
+  private void GameInput_OnInteractAction(object sender, EventArgs e) {
+
+    if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out var hitInfo, interactionDistance, InteractLayerMask)) {
+
+      if (hitInfo.transform.TryGetComponent<ClearCounter>(out var component)) {
+
+        component.Interact();
+      }
+    }
+  }
 
   private void Update() {
 
@@ -27,18 +41,6 @@ public class Player : MonoBehaviour {
 
     // Update Walking state
     IsWalking = moveDir.sqrMagnitude > 0;
-
-    //if (gameInput.GetIsInteracting()) {
-    // Interaction
-    HandleInteractions();
-    //}
-  }
-
-  private void HandleInteractions() {
-
-    if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out var hitInfo, interactionDistance)) {
-      Debug.Log(hitInfo.transform.gameObject);
-    }
   }
 
   private Vector3 HandleMovement(Vector2 inputDir) {
