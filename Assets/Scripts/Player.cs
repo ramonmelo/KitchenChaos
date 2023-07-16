@@ -25,7 +25,6 @@ public class Player : MonoBehaviour {
     if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out var hitInfo, interactionDistance, InteractLayerMask)) {
 
       if (hitInfo.transform.TryGetComponent<ClearCounter>(out var component)) {
-
         component.Interact();
       }
     }
@@ -81,7 +80,7 @@ public class Player : MonoBehaviour {
 
     return moveDir;
   }
-
+  
   private bool CheckMove(Vector3 moveDir, float moveDistance) {
     float playerRadius = 0.7f;
     float playerHeight = 2f;
