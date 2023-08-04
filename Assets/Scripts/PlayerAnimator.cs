@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour {
+  [SerializeField] private Player player;
+  private Animator _animator;
 
-  [SerializeField]
-  private Player player;
-  private Animator animator;
+  private static readonly int IsWalking = Animator.StringToHash("IsWalking");
 
-  private const string IS_WALKING = "IsWalking";
-
-  void Awake() {
-    animator = GetComponent<Animator>();
+  private void Awake() {
+    _animator = GetComponent<Animator>();
   }
 
-  void Update() {
-    animator.SetBool(IS_WALKING, player.IsWalking);
+  private void Update() {
+    _animator.SetBool(IsWalking, player.IsWalking);
   }
 }

@@ -1,28 +1,23 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-
 public class Player : MonoBehaviour {
-
   public bool IsWalking { get; private set; }
 
   [SerializeField] private float moveSpeed = 5f;
-  [SerializeField] private LayerMask InteractLayerMask;
+  [SerializeField] private LayerMask interactLayerMask;
   [SerializeField] private GameInput gameInput;
 
-  private readonly float rotateSpeed = 12f;
-  private readonly float interactionDistance = 2f;
+  private const float RotateSpeed = 12f;
+  private const float InteractionDistance = 2f;
 
   private void Start() {
     gameInput.OnInteractAction += GameInput_OnInteractAction;
   }
 
   private void GameInput_OnInteractAction(object sender, EventArgs e) {
-
-    if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out var hitInfo, interactionDistance, InteractLayerMask)) {
-
+    if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out var hitInfo, InteractionDistance,
+          interactLayerMask)) {
       if (hitInfo.transform.TryGetComponent<ClearCounter>(out var component)) {
         component.Interact();
       }
@@ -30,7 +25,6 @@ public class Player : MonoBehaviour {
   }
 
   private void Update() {
-
     // Input
     var inputDir = gameInput.GetMovementVectorNormalized();
 
@@ -75,14 +69,17 @@ public class Player : MonoBehaviour {
       moveDir = Vector3.zero;
     }
 
-    transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeed * Time.deltaTime);
+    transform.forward = Vector3.Slerp(transform.forward, moveDir, RotateSpeed * Time.deltaTime);
 
     return moveDir;
   }
-  
+
   private bool CheckMove(Vector3 moveDir, float moveDistance) {
-    float playerRadius = 0.7f;
-    float playerHeight = 2f;
-    return Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance) == false;
+    const float playerRadius = 0.7f;
+    const float playerHeight = 2f;
+    var position = transform.position;
+
+    return Physics.CapsuleCast(position, position + Vector3.up * playerHeight, playerRadius,
+      moveDir, moveDistance) == false;
   }
 }
