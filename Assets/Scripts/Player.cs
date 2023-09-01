@@ -94,7 +94,9 @@ public class Player : MonoBehaviour {
       moveDir = Vector3.zero;
     }
 
-    transform.forward = Vector3.Slerp(transform.forward, lookDir, RotateSpeed * Time.deltaTime);
+    if (lookDir != Vector3.zero) {
+      transform.forward = Vector3.Slerp(transform.forward, lookDir, RotateSpeed * Time.deltaTime);
+    }
 
     return moveDir;
   }
