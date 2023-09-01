@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour {
 
-  public event EventHandler OnInteractAction;
+  public event Action OnInteractAction;
 
   private PlayerInputActions _playerActions;
 
@@ -16,7 +16,7 @@ public class GameInput : MonoBehaviour {
   }
 
   private void Interact_performed(InputAction.CallbackContext context) {
-    OnInteractAction?.Invoke(this, EventArgs.Empty);
+    OnInteractAction?.Invoke();
   }
 
   public Vector2 GetMovementVectorNormalized() => _playerActions.Player.Move.ReadValue<Vector2>();

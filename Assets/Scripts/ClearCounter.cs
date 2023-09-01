@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClearCounter : MonoBehaviour {
+public class ClearCounter : Interactable {
 
-  public void Interact() {
-    Debug.Log("Clear Counter Interact");
+  public override void Interact() {
+    Debug.Log("Clear counter");
   }
 }
