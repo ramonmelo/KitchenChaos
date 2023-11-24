@@ -1,10 +1,24 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Controls the Player
+/// </summary>
 public class Player : MonoBehaviour {
+  
+  /// <summary>
+  /// The Player instance
+  /// </summary>
   public static Player Instance { get; private set; }
 
+  /// <summary>
+  /// Returns true if the Player is walking
+  /// </summary>
   public bool IsWalking { get; private set; }
+  
+  /// <summary>
+  /// Event that is invoked when the Interactable changes
+  /// </summary>
   public event Action<IInteractable> OnInteractableChanged;
 
   [SerializeField] private float moveSpeed = 5f;
@@ -22,18 +36,22 @@ public class Player : MonoBehaviour {
   }
 
   private void Start() {
+    // Subscribe to the Interact Action
     gameInput.OnInteractAction += GameInput_OnInteractAction;
   }
 
+  /// <summary>
+  /// Interacts with the current Interactable
+  /// </summary>
   private void GameInput_OnInteractAction() {
     _interactable?.Interact();
   }
 
   private void Update() {
-    // Input
+    // Get the Movement Vector normalized
     var inputDir = gameInput.GetMovementVectorNormalized();
 
-    // Movement
+    // Handle Movement
     var moveDir = HandleMovement(inputDir);
 
     // Check for Interactable
