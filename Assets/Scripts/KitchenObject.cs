@@ -5,6 +5,10 @@ using UnityEngine.Assertions;
 public class KitchenObject : MonoBehaviour {
   [SerializeField] private KitchenObjectSO kitchenObject;
 
+  public KitchenObjectSO GetKitchenObjectData() {
+    return kitchenObject;
+  }
+  
   public IKitchenObjectHolder GetHolder() {
     return GetComponentInParent<IKitchenObjectHolder>();
   }
