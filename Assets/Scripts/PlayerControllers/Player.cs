@@ -1,11 +1,11 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Controls the Player
 /// </summary>
-public class Player : MonoBehaviour {
-  
+public class Player : MonoBehaviour, IKitchenObjectHolder {
   /// <summary>
   /// The Player instance
   /// </summary>
@@ -15,12 +15,13 @@ public class Player : MonoBehaviour {
   /// Returns true if the Player is walking
   /// </summary>
   public bool IsWalking { get; private set; }
-  
+
   /// <summary>
   /// Event that is invoked when the Interactable changes
   /// </summary>
   public event Action<IInteractable> OnInteractableChanged;
 
+  [SerializeField] private Transform holdingPoint;
   [SerializeField] private float moveSpeed = 5f;
   [SerializeField] private LayerMask interactLayerMask;
   [SerializeField] private GameInput gameInput;
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour {
   private const float RotateSpeed = 12f;
   private const float InteractionDistance = 1f;
   private IInteractable _interactable;
+  private KitchenObject _kitchenObject;
 
   private void Awake() {
     if (Instance == null) {
@@ -44,7 +46,7 @@ public class Player : MonoBehaviour {
   /// Interacts with the current Interactable
   /// </summary>
   private void GameInput_OnInteractAction() {
-    _interactable?.Interact();
+    _interactable?.Interact(this);
   }
 
   private void Update() {
@@ -67,7 +69,6 @@ public class Player : MonoBehaviour {
     if (Physics.Raycast(transform.position, transform.forward, out var hitInfo, InteractionDistance,
           interactLayerMask) &&
         hitInfo.transform.TryGetComponent<IInteractable>(out var component)) {
-      
       // change to a new Interactable
       changed = component;
     }
@@ -81,7 +82,7 @@ public class Player : MonoBehaviour {
     // Move
     var moveDir = new Vector3(inputDir.x, 0, inputDir.y);
     var lookDir = moveDir.normalized;
-    
+
     // Collision Check
     var moveDistance = moveSpeed * Time.deltaTime;
     var canMove = CheckMove(moveDir, moveDistance);
@@ -126,5 +127,29 @@ public class Player : MonoBehaviour {
 
     return Physics.CapsuleCast(position, position + Vector3.up * playerHeight, playerRadius,
       moveDir, moveDistance) == false;
+  }
+
+  public Transform GetHoldingPoint() {
+    return holdingPoint != null ? holdingPoint : transform;
+  }
+
+  public bool IsHoldingKitchenObject() {
+    return _kitchenObject != null;
+  }
+
+  public void HoldKitchenObject(KitchenObject kitchenObject) {
+    // Ignore if there is already a kitchen object
+    if (IsHoldingKitchenObject()) { return; }
+
+    // Store the kitchen object
+    _kitchenObject = kitchenObject;
+  }
+
+  public void DropKitchenObject() {
+    _kitchenObject = null;
+  }
+
+  public KitchenObject GetKitchenObject() {
+    return _kitchenObject;
   }
 }

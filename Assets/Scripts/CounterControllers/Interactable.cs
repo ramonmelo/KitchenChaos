@@ -37,5 +37,5 @@ public abstract class Interactable : MonoBehaviour, IInteractable {
   /// Abstract method for interaction with the object.
   /// Must be implemented in derived classes.
   /// </summary>
-  public abstract void Interact();
+  public abstract void Interact(IKitchenObjectHolder kitchenObjectHolder);
 }
