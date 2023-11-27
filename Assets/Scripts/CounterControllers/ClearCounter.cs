@@ -1,23 +1,16 @@
 using UnityEngine;
 
 public class ClearCounter : Interactable, IKitchenObjectHolder {
-  [SerializeField] private KitchenObjectSO kitchenObjectData;
   [SerializeField] private Transform counterTopPoint;
 
   // Currently held kitchen object
   private KitchenObject _kitchenObject;
 
   public override void Interact(IKitchenObjectHolder kitchenObjectHolder) {
-    if (IsHoldingKitchenObject() == false) {
-      if (kitchenObjectHolder.IsHoldingKitchenObject()) {
-        kitchenObjectHolder.GetKitchenObject().TransferTo(this);
-      } else {
-        
-        var kitchenObjectInstance = Instantiate(this.kitchenObjectData.prefab);
-        kitchenObjectInstance.GetComponent<KitchenObject>().TransferTo(this);
-      }
-    } else {
+    if (IsHoldingKitchenObject()) {
       _kitchenObject.TransferTo(kitchenObjectHolder);
+    } else if (kitchenObjectHolder.IsHoldingKitchenObject()) {
+      kitchenObjectHolder.GetKitchenObject().TransferTo(this);
     }
   }
 
