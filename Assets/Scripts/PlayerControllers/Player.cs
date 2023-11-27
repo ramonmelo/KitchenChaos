@@ -141,11 +141,17 @@ public class Player : MonoBehaviour, IKitchenObjectHolder {
     // Ignore if there is already a kitchen object
     if (IsHoldingKitchenObject()) { return; }
 
+    Debug.Log($"Pick up {kitchenObject.GetKitchenObjectData().objectName}");
+
     // Store the kitchen object
     _kitchenObject = kitchenObject;
   }
 
   public void DropKitchenObject() {
+    if (_kitchenObject != null) {
+      Debug.Log($"Dropping {_kitchenObject.GetKitchenObjectData().objectName}");
+    }
+
     _kitchenObject = null;
   }
 

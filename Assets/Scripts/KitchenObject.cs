@@ -9,29 +9,29 @@ public class KitchenObject : MonoBehaviour {
     return kitchenObject;
   }
   
-  public IKitchenObjectHolder GetHolder() {
+  public IKitchenObjectHolder GetCurrentHolder() {
     return GetComponentInParent<IKitchenObjectHolder>();
   }
   
   public bool IsHeld() {
-    return GetHolder() != null;
+    return GetCurrentHolder() != null;
   }
 
-  public void TransferTo(IKitchenObjectHolder holder) {
-    Assert.IsNotNull(holder);
+  public void TransferTo(IKitchenObjectHolder newHolder) {
+    Assert.IsNotNull(newHolder);
     
     // Ignore if the holder is already holding a kitchen object
-    if (holder.IsHoldingKitchenObject()) return;
+    if (newHolder.IsHoldingKitchenObject()) return;
     
     // Drop any kitchen object that the holder is holding
-    GetHolder()?.DropKitchenObject();
+    GetCurrentHolder()?.DropKitchenObject();
     
     // Parent the kitchen object to the holder's holding point
     var kitchenObjectTransform = transform;
-    kitchenObjectTransform.parent = holder.GetHoldingPoint();
+    kitchenObjectTransform.parent = newHolder.GetHoldingPoint();
     kitchenObjectTransform.localPosition = Vector3.zero;
     
     // Store the kitchen object
-    holder.HoldKitchenObject(this);
+    newHolder.HoldKitchenObject(this);
   }
 }
